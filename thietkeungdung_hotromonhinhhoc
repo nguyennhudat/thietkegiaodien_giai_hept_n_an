@@ -33,10 +33,10 @@ def tinh_dien_tich_chu_vi_hinh_tam_giac():
     label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
 
 def tinh_dien_tich_chu_vi_hinh_binh_hanh():
-    chieu_dai = float(entry_chieu_dai_binh_hanh.get())
-    chieu_rong = float(entry_chieu_rong_binh_hanh.get())
-    dien_tich = chieu_dai * chieu_rong
-    chu_vi = 2 * (chieu_dai + chieu_rong)
+    canh_day = float(entry_canh_day.get())
+    canh_ben = float(entry_canh_ben.get())
+    dien_tich = canh_day * canh_ben
+    chu_vi = 2 * (canh_day + canh_ben)
     label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
 
 def tinh_dien_tich_chu_vi_hinh_thang():
@@ -130,12 +130,12 @@ entry_canh_c.pack()
 
 label_binh_hanh = tk.Label(tab_binh_hanh, text="Nhập chiều dài hình bình hành:")
 label_binh_hanh.pack()
-entry_chieu_dai_binh_hanh = tk.Entry(tab_binh_hanh)
-entry_chieu_dai_binh_hanh.pack()
-label_chieu_rong_binh_hanh = tk.Label(tab_binh_hanh, text="Nhập chiều rộng hình bình hành:")
-label_chieu_rong_binh_hanh.pack()
-entry_chieu_rong_binh_hanh = tk.Entry(tab_binh_hanh)
-entry_chieu_rong_binh_hanh.pack()
+entry_canh_day = tk.Entry(tab_binh_hanh)
+entry_canh_day.pack()
+label_canh_ben = tk.Label(tab_binh_hanh, text="Nhập chiều rộng hình bình hành:")
+label_canh_ben.pack()
+entry_canh_ben = tk.Entry(tab_binh_hanh)
+entry_canh_ben.pack()
 
 label_thang = tk.Label(tab_thang, text="Nhập độ dài đáy lớn:")
 label_thang.pack()
