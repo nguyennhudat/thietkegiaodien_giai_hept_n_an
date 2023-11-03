@@ -1,0 +1,185 @@
+import math
+import tkinter as tk
+from tkinter import ttk
+
+selected_shape = None
+
+def tinh_dien_tich_chu_vi_hinh_tron():
+    ban_kinh = float(entry_ban_kinh.get())
+    dien_tich = math.pi * ban_kinh ** 2
+    chu_vi = 2 * math.pi * ban_kinh
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_vuong():
+    canh = float(entry_canh_vuong.get())
+    dien_tich = canh ** 2
+    chu_vi = 4 * canh
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_chu_nhat():
+    chieu_dai = float(entry_chieu_dai.get())
+    chieu_rong = float(entry_chieu_rong.get())
+    dien_tich = chieu_dai * chieu_rong
+    chu_vi = 2 * (chieu_dai + chieu_rong)
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_tam_giac():
+    a = float(entry_canh_a.get())
+    b = float(entry_canh_b.get())
+    c = float(entry_canh_c.get())
+    chu_vi = a + b + c
+    s = chu_vi / 2
+    dien_tich = (s * (s - a) * (s - b) * (s - c)) ** 0.5
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_binh_hanh():
+    chieu_dai = float(entry_chieu_dai_binh_hanh.get())
+    chieu_rong = float(entry_chieu_rong_binh_hanh.get())
+    dien_tich = chieu_dai * chieu_rong
+    chu_vi = 2 * (chieu_dai + chieu_rong)
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_thang():
+    do_day_lon = float(entry_do_day_lon.get())
+    do_day_be = float(entry_do_day_be.get())
+    chieu_cao = float(entry_chieu_cao.get())
+    dien_tich = (do_day_lon + do_day_be) * chieu_cao / 2
+    chu_vi = do_day_lon + do_day_be + 2 * math.sqrt((chieu_cao ** 2) + ((do_day_lon - do_day_be) / 2) ** 2)
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def tinh_dien_tich_chu_vi_hinh_thoi():
+    duong_cheo_lon = float(entry_duong_cheo_lon.get())
+    duong_cheo_be = float(entry_duong_cheo_be.get())
+    dien_tich = 0.5 * duong_cheo_lon * duong_cheo_be
+    chu_vi = 2 * (duong_cheo_lon + duong_cheo_be)
+    label_result.config(text=f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}")
+
+def select_shape(shape):
+    global selected_shape
+    selected_shape = shape
+
+def tinh_ket_qua():
+    if selected_shape == "tron":
+        tinh_dien_tich_chu_vi_hinh_tron()
+    elif selected_shape == "vuong":
+        tinh_dien_tich_chu_vi_hinh_vuong()
+    elif selected_shape == "chu_nhat":
+        tinh_dien_tich_chu_vi_hinh_chu_nhat()
+    elif selected_shape == "tam_giac":
+        tinh_dien_tich_chu_vi_hinh_tam_giac()
+    elif selected_shape == "binh_hanh":
+        tinh_dien_tich_chu_vi_hinh_binh_hanh()
+    elif selected_shape == "thang":
+        tinh_dien_tich_chu_vi_hinh_thang()
+    elif selected_shape == "thoi":
+        tinh_dien_tich_chu_vi_hinh_thoi()
+
+root = tk.Tk()
+root.title("Tính Diện Tích và Chu Vi Hình Học")
+
+notebook = ttk.Notebook(root)
+tab_tron = ttk.Frame(notebook)
+tab_vuong = ttk.Frame(notebook)
+tab_chu_nhat = ttk.Frame(notebook)
+tab_tam_giac = ttk.Frame(notebook)
+tab_binh_hanh = ttk.Frame(notebook)
+tab_thang = ttk.Frame(notebook)
+tab_thoi = ttk.Frame(notebook)
+
+notebook.add(tab_tron, text="Hình Tròn")
+notebook.add(tab_vuong, text="Hình Vuông")
+notebook.add(tab_chu_nhat, text="Hình Chữ Nhật")
+notebook.add(tab_tam_giac, text="Hình Tam Giác")
+notebook.add(tab_binh_hanh, text="Hình Bình Hành")
+notebook.add(tab_thang, text="Hình Thang")
+notebook.add(tab_thoi, text="Hình Thoi")
+
+notebook.pack()
+
+label_tron = tk.Label(tab_tron, text="Nhập bán kính hình tròn:")
+label_tron.pack()
+entry_ban_kinh = tk.Entry(tab_tron)
+entry_ban_kinh.pack()
+
+label_vuong = tk.Label(tab_vuong, text="Nhập cạnh hình vuông:")
+label_vuong.pack()
+entry_canh_vuong = tk.Entry(tab_vuong)
+entry_canh_vuong.pack()
+
+label_chu_nhat = tk.Label(tab_chu_nhat, text="Nhập chiều dài hình chữ nhật:")
+label_chu_nhat.pack()
+entry_chieu_dai = tk.Entry(tab_chu_nhat)
+entry_chieu_dai.pack()
+label_chieu_rong = tk.Label(tab_chu_nhat, text="Nhập chiều rộng hình chữ nhật:")
+label_chieu_rong.pack()
+entry_chieu_rong = tk.Entry(tab_chu_nhat)
+entry_chieu_rong.pack()
+
+label_tam_giac = tk.Label(tab_tam_giac, text="Nhập cạnh a của tam giác:")
+label_tam_giac.pack()
+entry_canh_a = tk.Entry(tab_tam_giac)
+entry_canh_a.pack()
+label_canh_b = tk.Label(tab_tam_giac, text="Nhập cạnh b của tam giác:")
+label_canh_b.pack()
+entry_canh_b = tk.Entry(tab_tam_giac)
+entry_canh_b.pack()
+label_canh_c = tk.Label(tab_tam_giac, text="Nhập cạnh c của tam giác:")
+label_canh_c.pack()
+entry_canh_c = tk.Entry(tab_tam_giac)
+entry_canh_c.pack()
+
+label_binh_hanh = tk.Label(tab_binh_hanh, text="Nhập chiều dài hình bình hành:")
+label_binh_hanh.pack()
+entry_chieu_dai_binh_hanh = tk.Entry(tab_binh_hanh)
+entry_chieu_dai_binh_hanh.pack()
+label_chieu_rong_binh_hanh = tk.Label(tab_binh_hanh, text="Nhập chiều rộng hình bình hành:")
+label_chieu_rong_binh_hanh.pack()
+entry_chieu_rong_binh_hanh = tk.Entry(tab_binh_hanh)
+entry_chieu_rong_binh_hanh.pack()
+
+label_thang = tk.Label(tab_thang, text="Nhập độ dài đáy lớn:")
+label_thang.pack()
+entry_do_day_lon = tk.Entry(tab_thang)
+entry_do_day_lon.pack()
+label_thang_be = tk.Label(tab_thang, text="Nhập độ lớn đáy bé:")
+label_thang_be.pack()
+entry_do_day_be = tk.Entry(tab_thang)
+entry_do_day_be.pack()
+label_chieu_cao = tk.Label(tab_thang, text="Nhập chiều cao:")
+label_chieu_cao.pack()
+entry_chieu_cao = tk.Entry(tab_thang)
+entry_chieu_cao.pack()
+
+label_thoi = tk.Label(tab_thoi, text="Nhập độ dài đường chéo lớn:")
+label_thoi.pack()
+entry_duong_cheo_lon = tk.Entry(tab_thoi)
+entry_duong_cheo_lon.pack()
+label_duong_cheo_be = tk.Label(tab_thoi, text="Nhập độ dài đường chéo bé:")
+label_duong_cheo_be.pack()
+entry_duong_cheo_be = tk.Entry(tab_thoi)
+entry_duong_cheo_be.pack()
+
+select_tron_button = tk.Button(root, text="Hình Tròn", command=lambda: select_shape("tron"))
+select_vuong_button = tk.Button(root, text="Hình Vuông", command=lambda: select_shape("vuong"))
+select_chu_nhat_button = tk.Button(root, text="Hình Chữ Nhật", command=lambda: select_shape("chu_nhat"))
+select_tam_giac_button = tk.Button(root, text="Hình Tam Giác", command=lambda: select_shape("tam_giac"))
+select_binh_hanh_button = tk.Button(root, text="Hình Bình Hành", command=lambda: select_shape("binh_hanh"))
+select_thang_button = tk.Button(root, text="Hình Thang", command=lambda: select_shape("thang"))
+select_thoi_button = tk.Button(root, text="Hình Thoi", command=lambda: select_shape("thoi"))
+
+select_tron_button.pack()
+select_vuong_button.pack()
+select_chu_nhat_button.pack()
+select_tam_giac_button.pack()
+select_binh_hanh_button.pack()
+select_thang_button.pack()
+select_thoi_button.pack()
+
+tinh_ket_qua_button = tk.Button(root, text="Tính Kết Quả", command=tinh_ket_qua)
+tinh_ket_qua_button.pack()
+
+label_result = tk.Label(root, text="")
+label_result.pack()
+
+root.mainloop()
+
