@@ -106,3 +106,106 @@ class SignalProcessingApp:
 root = Tk()
 app = SignalProcessingApp(root)
 root.mainloop()
+
+
+
+
+#chưa có giao diện
+"""import numpy as np
+from scipy import signal
+import matplotlib.pyplot as plt
+
+# Nhập thông số của tín hiệu
+fs = 1000  # Tần số lấy mẫu (Hz)
+duration = float(input("Nhập thời gian của tín hiệu (giây): "))
+f = float(input("Nhập tần số của tín hiệu (Hz): "))
+
+# Tạo một tín hiệu sinewave
+t = np.arange(0, duration, 1/fs)  # Thời gian từ 0 đến duration giây với bước là 1/fs
+x = np.sin(2 * np.pi * f * t)
+
+# Tính Fourier transform của tín hiệu
+n = len(x)
+k = np.arange(n)
+T = n / fs
+frq = k / T  # two sides frequency range
+frq = frq[:n // 2]  # one side frequency range
+
+X = np.fft.fft(x) / n  # Fourier transform and normalization
+X = X[:n // 2]
+
+# Vẽ đồ thị Fourier transform của tín hiệu sinewave
+plt.figure(figsize=(12, 10))
+
+plt.subplot(4, 2, 1)
+plt.plot(t, x)
+plt.xlabel('Thời gian (s)')
+plt.ylabel('Amplitude')
+plt.title('Tín hiệu sinewave')
+
+plt.subplot(4, 2, 2)
+plt.plot(frq, abs(X))
+plt.xlabel('Tần số (Hz)')
+plt.ylabel('Biên độ')
+plt.title('Biểu đồ Fourier transform của tín hiệu sinewave')
+
+# Thiết kế bộ lọc thông thấp FIR
+nyquist = 0.5 * fs
+low = 20  # Cutoff frequency for low-pass filter
+low /= nyquist
+fir_coeff = signal.firwin(101, low, window='hamming')
+
+# Lọc thông thấp FIR
+filtered_low_fir = signal.lfilter(fir_coeff, 1.0, x)
+
+# Vẽ đồ thị tín hiệu sau khi lọc thông thấp FIR
+plt.subplot(4, 2, 3)
+plt.plot(t, filtered_low_fir)
+plt.xlabel('Thời gian (s)')
+plt.ylabel('Amplitude')
+plt.title('Tín hiệu sau khi lọc thông thấp FIR')
+
+# Thiết kế bộ lọc thông cao FIR
+high = 100  # Cutoff frequency for high-pass filter
+high /= nyquist
+fir_coeff = signal.firwin(101, high, window='hamming')
+
+# Lọc thông cao FIR
+filtered_high_fir = signal.lfilter(fir_coeff, 1.0, x)
+
+# Vẽ đồ thị tín hiệu sau khi lọc thông cao FIR
+plt.subplot(4, 2, 4)
+plt.plot(t, filtered_high_fir)
+plt.xlabel('Thời gian (s)')
+plt.ylabel('Amplitude')
+plt.title('Tín hiệu sau khi lọc thông cao FIR')
+
+# Thiết kế bộ lọc thông thấp IIR
+b, a = signal.butter(4, low, btype='low')
+
+# Lọc thông thấp IIR
+filtered_low_iir = signal.lfilter(b, a, x)
+
+# Vẽ đồ thị tín hiệu sau khi lọc thông thấp IIR
+plt.subplot(4, 2, 5)
+plt.plot(t, filtered_low_iir)
+plt.xlabel('Thời gian (s)')
+plt.ylabel('Amplitude')
+plt.title('Tín hiệu sau khi lọc thông thấp IIR')
+
+# Thiết kế bộ lọc thông cao IIR
+b, a = signal.butter(4, high, btype='high')
+
+# Lọc thông cao IIR
+filtered_high_iir = signal.lfilter(b, a, x)
+
+# Vẽ đồ thị tín hiệu sau khi lọc thông cao IIR
+plt.subplot(4, 2, 6)
+plt.plot(t, filtered_high_iir)
+plt.xlabel('Thời gian (s)')
+plt.ylabel('Amplitude')
+plt.title('Tín hiệu sau khi lọc thông cao IIR')
+
+plt.tight_layout()
+plt.show()"""
+
