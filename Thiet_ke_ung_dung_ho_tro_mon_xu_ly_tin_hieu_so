@@ -1,0 +1,108 @@
+import numpy as np
+from scipy import signal
+import matplotlib.pyplot as plt
+from tkinter import Tk, Label, Entry, Button, StringVar, IntVar, Frame
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+class SignalProcessingApp:
+    def __init__(self, master):
+        self.master = master
+        master.title("Signal Processing App")
+
+        self.fs_label = Label(master, text="Tần số lấy mẫu (Hz):")
+        self.fs_label.grid(row=0, column=0, sticky="w")
+        self.fs_entry = Entry(master)
+        self.fs_entry.grid(row=0, column=1)
+
+        self.duration_label = Label(master, text="Thời gian của tín hiệu (giây):")
+        self.duration_label.grid(row=1, column=0, sticky="w")
+        self.duration_entry = Entry(master)
+        self.duration_entry.grid(row=1, column=1)
+
+        self.f_label = Label(master, text="Tần số của tín hiệu (Hz):")
+        self.f_label.grid(row=2, column=0, sticky="w")
+        self.f_entry = Entry(master)
+        self.f_entry.grid(row=2, column=1)
+
+        self.process_button = Button(master, text="Xử lý tín hiệu", command=self.process_signal)
+        self.process_button.grid(row=3, column=0, columnspan=2)
+
+        self.figure, self.axes = plt.subplots(4, 2, figsize=(12, 10))
+        self.canvas = FigureCanvasTkAgg(self.figure, master=master)
+        self.canvas.get_tk_widget().grid(row=4, column=0, columnspan=2)
+
+    def process_signal(self):
+        fs = float(self.fs_entry.get())
+        duration = float(self.duration_entry.get())
+        f = float(self.f_entry.get())
+
+        t = np.arange(0, duration, 1/fs)
+        x = np.sin(2 * np.pi * f * t)
+
+        n = len(x)
+        k = np.arange(n)
+        T = n / fs
+        frq = k / T
+        frq = frq[:n // 2]
+
+        X = np.fft.fft(x) / n
+        X = X[:n // 2]
+
+        self.axes[0, 0].clear()
+        self.axes[0, 0].plot(t, x)
+        self.axes[0, 0].set_xlabel('Thời gian (s)')
+        self.axes[0, 0].set_ylabel('Amplitude')
+        self.axes[0, 0].set_title('Tín hiệu sinewave')
+
+        self.axes[0, 1].clear()
+        self.axes[0, 1].plot(frq, abs(X))
+        self.axes[0, 1].set_xlabel('Tần số (Hz)')
+        self.axes[0, 1].set_ylabel('Biên độ')
+        self.axes[0, 1].set_title('Biểu đồ Fourier transform của tín hiệu sinewave')
+
+        nyquist = 0.5 * fs
+        low = 20
+        low /= nyquist
+        fir_coeff = signal.firwin(101, low, window='hamming')
+        filtered_low_fir = signal.lfilter(fir_coeff, 1.0, x)
+
+        self.axes[1, 0].clear()
+        self.axes[1, 0].plot(t, filtered_low_fir)
+        self.axes[1, 0].set_xlabel('Thời gian (s)')
+        self.axes[1, 0].set_ylabel('Amplitude')
+        self.axes[1, 0].set_title('Tín hiệu sau khi lọc thông thấp FIR')
+
+        high = 100
+        high /= nyquist
+        fir_coeff = signal.firwin(101, high, window='hamming')
+        filtered_high_fir = signal.lfilter(fir_coeff, 1.0, x)
+
+        self.axes[1, 1].clear()
+        self.axes[1, 1].plot(t, filtered_high_fir)
+        self.axes[1, 1].set_xlabel('Thời gian (s)')
+        self.axes[1, 1].set_ylabel('Amplitude')
+        self.axes[1, 1].set_title('Tín hiệu sau khi lọc thông cao FIR')
+
+        b, a = signal.butter(4, low, btype='low')
+        filtered_low_iir = signal.lfilter(b, a, x)
+
+        self.axes[2, 0].clear()
+        self.axes[2, 0].plot(t, filtered_low_iir)
+        self.axes[2, 0].set_xlabel('Thời gian (s)')
+        self.axes[2, 0].set_ylabel('Amplitude')
+        self.axes[2, 0].set_title('Tín hiệu sau khi lọc thông thấp IIR')
+
+        b, a = signal.butter(4, high, btype='high')
+        filtered_high_iir = signal.lfilter(b, a, x)
+
+        self.axes[2, 1].clear()
+        self.axes[2, 1].plot(t, filtered_high_iir)
+        self.axes[2, 1].set_xlabel('Thời gian (s)')
+        self.axes[2, 1].set_ylabel('Amplitude')
+        self.axes[2, 1].set_title('Tín hiệu sau khi lọc thông cao IIR')
+
+        self.canvas.draw()
+
+root = Tk()
+app = SignalProcessingApp(root)
+root.mainloop()
