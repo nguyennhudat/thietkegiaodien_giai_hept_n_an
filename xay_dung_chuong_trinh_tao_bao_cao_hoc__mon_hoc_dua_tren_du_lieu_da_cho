@@ -1,0 +1,93 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import tkinter as tk
+from tkinter import filedialog
+
+def load_data(file_path):
+    df = pd.read_csv(file_path, index_col=0, header=0)
+    return np.array(df.iloc[:, :])
+
+def print_total_students(data, output_text):
+    output_text.insert(tk.END, 'Tong so sinh vien di thi:\n')
+    total_students = data[:, 1]
+    output_text.insert(tk.END, f'{np.sum(total_students)}\n\n')
+
+def print_class_with_max_A(data, output_text):
+    diem_A = data[:, 3]
+    max_A = diem_A.max()
+    i, = np.where(diem_A == max_A)
+    output_text.insert(tk.END, f'Lop co nhieu diem A la {data[i, 0]} co {max_A} sv dat diem A\n\n')
+
+def calculate_average_A(data, output_text):
+    diem_A = data[:, 3]
+    average_A = np.mean(diem_A)
+    output_text.insert(tk.END, f'Trung bình cộng điểm A trên toàn bộ danh sách là: {average_A}\n\n')
+
+def calculate_total_students_F(data, output_text):
+    diem_F = data[:, 5]
+    total_students_F = np.sum(diem_F)
+    output_text.insert(tk.END, f'Tong so sinh vien dat diem F la: {total_students_F}\n\n')
+
+def plot_scores(data):
+    diem_A = data[:, 3]
+    diem_Bc = data[:, 4]
+    plt.plot(range(len(diem_A)), diem_A, 'r-', label="Diem A")
+    plt.plot(range(len(diem_Bc)), diem_Bc, 'g-', label="Diem B +")
+    plt.xlabel('Lơp')
+    plt.ylabel('So sv dat diem')
+    plt.legend(loc='upper right')
+    plt.show()
+
+class DataAnalyzerApp:
+    def __init__(self, master):
+        self.master = master
+        self.master.title("Data Analyzer")
+
+        self.file_path = None
+        self.in_data = None
+
+        # Create buttons and text widget
+        self.load_button = tk.Button(self.master, text="Load Data", command=self.load_data)
+        self.load_button.pack()
+
+        self.analyze_button = tk.Button(self.master, text="Analyze Data", command=self.analyze_data)
+        self.analyze_button.pack()
+
+        self.print_button = tk.Button(self.master, text="Print Results", command=self.print_results)
+        self.print_button.pack()
+
+        self.quit_button = tk.Button(self.master, text="Quit", command=self.master.destroy)
+        self.quit_button.pack()
+
+        self.output_text = tk.Text(self.master, height=10, width=50)
+        self.output_text.pack()
+
+    def load_data(self):
+        self.file_path = filedialog.askopenfilename(title="Select CSV File", filetypes=[("CSV files", "*.csv")])
+        if self.file_path:
+            self.in_data = load_data(self.file_path)
+            self.output_text.insert(tk.END, "Data loaded successfully.\n\n")
+
+    def analyze_data(self):
+        if self.in_data is not None:
+            self.output_text.delete(1.0, tk.END)  # Clear previous results
+            self.output_text.insert(tk.END, "Analyzing data...\n\n")
+            print_total_students(self.in_data, self.output_text)
+            print_class_with_max_A(self.in_data, self.output_text)
+            calculate_average_A(self.in_data, self.output_text)
+            calculate_total_students_F(self.in_data, self.output_text)
+        else:
+            self.output_text.insert(tk.END, "Please load data first.\n\n")
+
+    def print_results(self):
+        results = self.output_text.get(1.0, tk.END)
+        print(results)
+
+def main():
+    root = tk.Tk()
+    app = DataAnalyzerApp(root)
+    root.mainloop()
+
+if __name__ == "__main__":
+    main()
