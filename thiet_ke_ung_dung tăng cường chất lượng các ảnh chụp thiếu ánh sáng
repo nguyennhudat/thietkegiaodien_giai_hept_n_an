@@ -1,0 +1,90 @@
+import cv2
+import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import Scale
+from PIL import Image, ImageTk
+
+def enhance_color_image(image_path, alpha, beta):
+    # Đọc ảnh từ đường dẫn
+    img = cv2.imread(image_path)
+
+    # Cân bằng histrogram cho từng kênh màu
+    img_yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
+    img_yuv[:,:,0] = cv2.equalizeHist(img_yuv[:,:,0])
+    img_output = cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
+
+    # Làm mờ ảnh để làm rõ chi tiết
+    img_blur = cv2.GaussianBlur(img_output, (5, 5), 0)
+
+    # Làm sáng và tăng cường tương phản
+    enhanced = cv2.convertScaleAbs(img_blur, alpha=alpha, beta=beta)
+
+    # Hiển thị ảnh gốc và ảnh sau khi tăng cường
+    cv2.imshow('Original Image', img)
+    cv2.imshow('Enhanced Color Image', enhanced)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+class ImageEnhancerApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Image Enhancer")
+
+        self.image_label = tk.Label(root)
+        self.image_label.pack(pady=10)
+
+        self.alpha_scale = Scale(root, label="Alpha", from_=0, to=3, orient=tk.HORIZONTAL, resolution=0.01, length=200)
+        self.alpha_scale.set(1.5)
+        self.alpha_scale.pack(pady=10)
+
+        self.beta_scale = Scale(root, label="Beta", from_=0, to=100, orient=tk.HORIZONTAL, resolution=1, length=200)
+        self.beta_scale.set(30)
+        self.beta_scale.pack(pady=10)
+
+        enhance_button = tk.Button(root, text="Enhance Image", command=self.load_and_enhance)
+        enhance_button.pack(pady=10)
+
+    def load_and_enhance(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg;*.jpeg;*.png")])
+        if file_path:
+            alpha_value = self.alpha_scale.get()
+            beta_value = self.beta_scale.get()
+            enhance_color_image(file_path, alpha_value, beta_value)
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ImageEnhancerApp(root)
+    root.mainloop()
+
+
+#
+import cv2
+import numpy as np
+
+def enhance_color_image(image_path):
+    # Đọc ảnh từ đường dẫn
+    img = cv2.imread(image_path)
+
+    # Cân bằng histrogram cho từng kênh màu
+    img_yuv = cv2.cvtColor(img, cv2.COLOR_BGR2YUV)
+    img_yuv[:,:,0] = cv2.equalizeHist(img_yuv[:,:,0])
+    img_output = cv2.cvtColor(img_yuv, cv2.COLOR_YUV2BGR)
+
+    # Làm mờ ảnh để làm rõ chi tiết
+    img_blur = cv2.GaussianBlur(img_output, (5, 5), 0)
+
+    # Làm sáng và tăng cường tương phản
+    alpha = 1.5
+    beta = 30
+    enhanced = cv2.convertScaleAbs(img_blur, alpha=alpha, beta=beta)
+
+    # Hiển thị ảnh gốc và ảnh sau khi tăng cường
+    cv2.imshow('Original Image', img)
+    cv2.imshow('Enhanced Color Image', enhanced)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+# Thay đổi đường dẫn ảnh của bạn tại đây
+image_path = 'path/to/your/image.jpg'
+enhance_color_image(image_path)
