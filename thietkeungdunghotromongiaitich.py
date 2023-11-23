@@ -71,3 +71,45 @@ result_label.pack()
 
 # Start the GUI main loop
 window.mainloop()
+
+#
+import sympy as sym
+import matplotlib.pyplot as plt
+import numpy as np
+
+def calculate_limit(expression, limit_x):
+    x = sym.symbols('x')
+    f = sym.sympify(expression)
+    limit = sym.limit(f, x, limit_x)
+    return limit
+
+def plot_and_calculate(expression):
+    x = sym.symbols('x')
+    f = sym.sympify(expression)
+
+    x_vals = np.linspace(-10, 10, 400)
+    f_lambda = sym.lambdify(x, f, "numpy")
+    y_vals = f_lambda(x_vals)
+
+    integral = sym.integrate(f, x)
+    derivative = sym.diff(f, x)
+
+    plt.figure()
+    plt.plot(x_vals, y_vals, label='f(x)', color='blue')
+    plt.title('Đồ thị hàm số f(x)')
+    plt.xlabel('x')
+    plt.ylabel('f(x)')
+    plt.legend()
+    plt.show()
+
+    print(f"Tích phân của f(x): {integral}")
+    print(f"Đạo hàm của f(x): {derivative}")
+
+# Example usage:
+expression = input("Nhập biểu thức hàm f(x): ")
+limit_x = float(input("Nhập giá trị x cho giới hạn: "))
+
+limit_result = calculate_limit(expression, limit_x)
+print(f"Giới hạn tại x = {limit_x}: {limit_result}")
+
+plot_and_calculate(expression)
