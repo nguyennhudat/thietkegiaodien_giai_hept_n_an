@@ -183,3 +183,72 @@ label_result.pack()
 
 root.mainloop()
 
+
+#
+
+import math
+
+def tinh_dien_tich_chu_vi_hinh_tron(ban_kinh):
+    dien_tich = math.pi * ban_kinh ** 2
+    chu_vi = 2 * math.pi * ban_kinh
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_vuong(canh):
+    dien_tich = canh ** 2
+    chu_vi = 4 * canh
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_chu_nhat(chieu_dai, chieu_rong):
+    dien_tich = chieu_dai * chieu_rong
+    chu_vi = 2 * (chieu_dai + chieu_rong)
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_tam_giac(a, b, c):
+    chu_vi = a + b + c
+    s = chu_vi / 2
+    dien_tich = (s * (s - a) * (s - b) * (s - c)) ** 0.5
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_binh_hanh(canh_day, canh_ben):
+    dien_tich = canh_day * canh_ben
+    chu_vi = 2 * (canh_day + canh_ben)
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_thang(do_day_lon, do_day_be, chieu_cao):
+    dien_tich = (do_day_lon + do_day_be) * chieu_cao / 2
+    chu_vi = do_day_lon + do_day_be + 2 * math.sqrt((chieu_cao ** 2) + ((do_day_lon - do_day_be) / 2) ** 2)
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+def tinh_dien_tich_chu_vi_hinh_thoi(duong_cheo_lon, duong_cheo_be):
+    dien_tich = 0.5 * duong_cheo_lon * duong_cheo_be
+    chu_vi = 2 * (duong_cheo_lon + duong_cheo_be)
+    return f"Diện tích: {dien_tich:.2f}\nChu vi: {chu_vi:.2f}"
+
+# Example usage:
+ban_kinh = float(input("Nhập bán kính hình tròn: "))
+print(tinh_dien_tich_chu_vi_hinh_tron(ban_kinh))
+
+canh_vuong = float(input("Nhập cạnh hình vuông: "))
+print(tinh_dien_tich_chu_vi_hinh_vuong(canh_vuong))
+
+chieu_dai_chu_nhat = float(input("Nhập chiều dài hình chữ nhật: "))
+chieu_rong_chu_nhat = float(input("Nhập chiều rộng hình chữ nhật: "))
+print(tinh_dien_tich_chu_vi_hinh_chu_nhat(chieu_dai_chu_nhat, chieu_rong_chu_nhat))
+
+canh_a_tam_giac = float(input("Nhập cạnh a của tam giác: "))
+canh_b_tam_giac = float(input("Nhập cạnh b của tam giác: "))
+canh_c_tam_giac = float(input("Nhập cạnh c của tam giác: "))
+print(tinh_dien_tich_chu_vi_hinh_tam_giac(canh_a_tam_giac, canh_b_tam_giac, canh_c_tam_giac))
+
+canh_day_binh_hanh = float(input("Nhập chiều dài hình bình hành: "))
+canh_ben_binh_hanh = float(input("Nhập chiều rộng hình bình hành: "))
+print(tinh_dien_tich_chu_vi_hinh_binh_hanh(canh_day_binh_hanh, canh_ben_binh_hanh))
+
+do_day_lon_thang = float(input("Nhập độ dài đáy lớn của hình thang: "))
+do_day_be_thang = float(input("Nhập độ lớn đáy bé của hình thang: "))
+chieu_cao_thang = float(input("Nhập chiều cao của hình thang: "))
+print(tinh_dien_tich_chu_vi_hinh_thang(do_day_lon_thang, do_day_be_thang, chieu_cao_thang))
+
+duong_cheo_lon_thoi = float(input("Nhập độ dài đường chéo lớn của hình thoi: "))
+duong_cheo_be_thoi = float(input("Nhập độ dài đường chéo bé của hình thoi: "))
+print(tinh_dien_tich_chu_vi_hinh_thoi(duong_cheo_lon_thoi, duong_cheo_be_thoi))
