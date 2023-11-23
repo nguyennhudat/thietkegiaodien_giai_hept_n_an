@@ -1,0 +1,101 @@
+import cv2
+import numpy as np
+import tkinter as tk
+from tkinter import filedialog
+from PIL import Image, ImageTk
+
+
+class TachBienAnhGUI:
+  def __init__(self, root):
+    self.root = root
+    self.root.title("Tach Bien Anh")
+
+    # Tạo các biến cần thiết
+    self.duong_dan_anh = None
+    self.anh_goc = None
+    self.anh_bien = None
+
+    # Tạo các thành phần giao diện
+    self.label_anh_goc = tk.Label(root, text="Ảnh Gốc")
+    self.label_anh_goc.pack()
+
+    self.canvas_anh_goc = tk.Canvas(root)
+    self.canvas_anh_goc.pack()
+
+    self.label_anh_bien = tk.Label(root, text="Biên Ảnh")
+    self.label_anh_bien.pack()
+
+    self.canvas_anh_bien = tk.Canvas(root)
+    self.canvas_anh_bien.pack()
+
+    self.btn_mo_anh = tk.Button(root, text="Mở Ảnh", command=self.mo_anh)
+    self.btn_mo_anh.pack()
+
+    self.btn_tach_bien = tk.Button(root, text="Tách Biên", command=self.tach_bien)
+    # Chỉ đặt thuộc tính state là DISABLED, để nút không hoạt động ban đầu
+    self.btn_tach_bien["state"] = "disabled"
+    self.btn_tach_bien.pack()
+
+  def mo_anh(self):
+    duong_dan_anh = filedialog.askopenfilename(title="Chọn ảnh", filetypes=[("Ảnh files", "*.png;*.jpg;*.jpeg")])
+
+    if duong_dan_anh:
+      self.duong_dan_anh = duong_dan_anh
+      self.cap_nhat_anh()
+      # Kích hoạt nút "Tách Biên" khi đã chọn ảnh
+      self.btn_tach_bien["state"] = "normal"
+
+  def tach_bien(self):
+    if self.duong_dan_anh:
+      # Đọc ảnh và tách biên
+      anh = cv2.imread(self.duong_dan_anh, cv2.IMREAD_GRAYSCALE)
+      anh_blur = cv2.GaussianBlur(anh, (5, 5), 0)
+      bien_anh = cv2.Canny(anh_blur, 50, 150)
+
+      # Hiển thị biên ảnh
+      img_anh_bien = ImageTk.PhotoImage(Image.fromarray(bien_anh))
+      self.canvas_anh_bien.config(width=img_anh_bien.width(), height=img_anh_bien.height())
+      self.canvas_anh_bien.create_image(0, 0, anchor=tk.NW, image=img_anh_bien)
+      self.canvas_anh_bien.image = img_anh_bien
+
+  def cap_nhat_anh(self):
+    # Đọc ảnh
+    anh = cv2.imread(self.duong_dan_anh)
+
+    # Hiển thị ảnh gốc
+    anh_goc_rgb = cv2.cvtColor(anh, cv2.COLOR_BGR2RGB)
+    img_anh_goc = ImageTk.PhotoImage(Image.fromarray(anh_goc_rgb))
+    self.canvas_anh_goc.config(width=img_anh_goc.width(), height=img_anh_goc.height())
+    self.canvas_anh_goc.create_image(0, 0, anchor=tk.NW, image=img_anh_goc)
+    self.canvas_anh_goc.image = img_anh_goc
+
+
+if __name__ == "__main__":
+  root = tk.Tk()
+  app = TachBienAnhGUI(root)
+  root.mainloop()
+
+
+#
+import cv2
+import numpy as np
+
+def tach_bien_anh(duong_dan_anh):
+    # Đọc ảnh
+    anh = cv2.imread(duong_dan_anh, cv2.IMREAD_GRAYSCALE)
+
+    # Áp dụng GaussianBlur để làm giảm nhiễu
+    anh_blur = cv2.GaussianBlur(anh, (5, 5), 0)
+
+    # Sử dụng hàm Canny để tách biên
+    bien_anh = cv2.Canny(anh_blur, 50, 150)
+
+    # Hiển thị ảnh gốc và ảnh tách biên
+    cv2.imshow('Anh Goc', anh)
+    cv2.imshow('Bien Anh', bien_anh)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+# Thay đổi đường dẫn của ảnh của bạn
+duong_dan_anh = 'anhmanguonmo.jpg'
+tach_bien_anh(duong_dan_anh)
