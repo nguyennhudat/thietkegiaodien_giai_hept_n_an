@@ -120,3 +120,56 @@ result_label = ttk.Label(frame, text="Kết quả sẽ được hiển thị ở
 result_label.grid(row=10, column=10, columnspan=2, padx=5, pady=5)
 
 root.mainloop()
+
+#
+import numpy as np
+from numpy.linalg import LinAlgError
+
+def solve_linear_equation(num_equations, coefficients, constants):
+    A = np.array(coefficients)
+    b = np.array(constants)
+
+    try:
+        X = np.linalg.solve(A, b)
+        return f"Nghiệm của hệ phương trình: {X}"
+    except LinAlgError:
+        return "Hệ phương trình không có nghiệm."
+
+def find_matrix_inverse(coefficients):
+    A = np.array(coefficients)
+
+    try:
+        A_inv = np.linalg.inv(A)
+        return f"Ma trận nghịch đảo của A:\n{A_inv}"
+    except LinAlgError:
+        return "Không thể tìm ma trận nghịch đảo của A."
+
+def find_matrix_rank(coefficients):
+    A = np.array(coefficients)
+    rank_A = np.linalg.matrix_rank(A)
+    return f"Hạng của ma trận A: {rank_A}"
+
+# Example usage:
+num_equations = int(input("Nhập số phương trình: "))
+
+coefficients = []
+constants = []
+
+for i in range(num_equations):
+    row = []
+    for j in range(num_equations):
+        coeff = float(input(f"Nhập A[{i + 1},{j + 1}]: "))
+        row.append(coeff)
+    coefficients.append(row)
+
+    constant = float(input(f"Nhập b[{i + 1}]: "))
+    constants.append(constant)
+
+result_solve = solve_linear_equation(num_equations, coefficients, constants)
+print(result_solve)
+
+result_inverse = find_matrix_inverse(coefficients)
+print(result_inverse)
+
+result_rank = find_matrix_rank(coefficients)
+print(result_rank)
