@@ -67,3 +67,28 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = ImageSmoothingApp(root)
     root.mainloop()
+
+
+#
+import cv2
+
+def adjust_smoothness(image_path, kernel_size=5):
+    # Đọc ảnh từ đường dẫn
+    image = cv2.imread(image_path)
+
+    # Lọc làm mịn ảnh bằng GaussianBlur
+    smoothed_image = cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+
+    # Hiển thị ảnh gốc và ảnh sau khi làm mịn
+    cv2.imshow("Original Image", image)
+    cv2.imshow("Smoothed Image", smoothed_image)
+
+    # Chờ người dùng nhấn một phím để đóng cửa sổ
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    input_image_path = "duong_dan_anh/input.jpg"
+    kernel_size = 5  # Bạn có thể điều chỉnh giá trị này để thay đổi độ mịn
+
+    adjust_smoothness(input_image_path, kernel_size)
