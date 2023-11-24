@@ -1,0 +1,235 @@
+import cv2
+import matplotlib.pyplot as plt
+
+def get_numeric_input(prompt):
+    while True:
+        user_input = input(prompt)
+        if user_input.isdigit():
+            return int(user_input)
+        else:
+            print("Vui lòng nhập một số nguyên.")
+
+def get_float_input(prompt):
+    while True:
+        user_input = input(prompt)
+        try:
+            return float(user_input)
+        except ValueError:
+            print("Vui lòng nhập một số thực.")
+
+def resize_smooth_edges_and_adjust_brightness(image_path, output_path, new_width, new_height, smoothed_sigma, canny_threshold1, canny_threshold2, brightness_alpha):
+    # Đọc ảnh từ đường dẫn
+    img = cv2.imread(image_path)
+
+    if img is None:
+        print(f"Không thể đọc file ảnh từ đường dẫn: {image_path}")
+        return
+
+    # Hiển thị tất cả các ảnh trước khi chỉnh sửa
+    Titles = ["Original"]
+    images = [img]
+    count = 1
+
+    for i in range(count):
+        plt.subplot(2, 3, i + 1)
+        plt.title(Titles[i])
+        plt.imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))  # Hiển thị ảnh màu đúng cách
+        plt.xticks([]), plt.yticks([])
+
+    # Thay đổi kích thước ảnh
+    resized = cv2.resize(img, (new_width, new_height))
+
+    # Hiển thị ảnh sau khi chỉnh kích thước
+    Titles.append("Resized (Original)")
+    images.append(resized)
+    count += 1
+
+    plt.subplot(2, 3, count)
+    plt.title(Titles[count - 1])
+    plt.imshow(cv2.cvtColor(images[count - 1], cv2.COLOR_BGR2RGB))
+    plt.xticks([]), plt.yticks([])
+
+    # Làm mịn ảnh bằng GaussianBlur trên ảnh gốc
+    smoothed = cv2.GaussianBlur(img, (smoothed_sigma, smoothed_sigma), 0)
+
+    # Hiển thị ảnh đã được làm mịn
+    Titles.append("Smoothed (Original)")
+    images.append(smoothed)
+    count += 1
+
+    plt.subplot(2, 3, count)
+    plt.title(Titles[count - 1])
+    plt.imshow(cv2.cvtColor(images[count - 1], cv2.COLOR_BGR2RGB))
+    plt.xticks([]), plt.yticks([])
+
+    # Tách biên ảnh bằng Canny trên ảnh đã được làm mịn
+    edges = cv2.Canny(smoothed, canny_threshold1, canny_threshold2)
+
+    # Hiển thị ảnh sau khi tách biên
+    Titles.append("Edges (Original)")
+    images.append(edges)
+    count += 1
+
+    plt.subplot(2, 3, count)
+    plt.title(Titles[count - 1])
+    plt.imshow(edges, cmap='gray')
+    plt.xticks([]), plt.yticks([])
+
+    # Chỉnh sáng ảnh gốc
+    alpha = brightness_alpha
+    adjusted_brightness = cv2.addWeighted(img, alpha, img, 0, 0)
+
+    # Hiển thị ảnh sau khi chỉnh sáng
+    Titles.append("Adjusted Brightness (Original)")
+    images.append(adjusted_brightness)
+    count += 1
+
+    plt.subplot(2, 3, count)
+    plt.title(Titles[count - 1])
+    plt.imshow(cv2.cvtColor(images[count - 1], cv2.COLOR_BGR2RGB))
+    plt.xticks([]), plt.yticks([])
+
+    # Lưu bảng hiển thị thành file hình ảnh
+    plt.savefig(output_path)
+    plt.show()
+
+# Nhập tên ảnh và xử lý ảnh
+while True:
+    image_path = input("Nhập tên file ảnh (hoặc nhấn Enter để thoát): ")
+    if not image_path:
+        break  # Thoát khỏi vòng lặp nếu không nhập tên ảnh
+    else:
+        output_path = input("Nhập tên file hình ảnh xuất ra (ví dụ: output.png): ")
+        new_width = get_numeric_input("Nhập chiều rộng mới: ")
+        new_height = get_numeric_input("Nhập chiều cao mới: ")
+        smoothed_sigma = get_numeric_input("Nhập độ lệch chuẩn cho GaussianBlur: ")
+        canny_threshold1 = get_numeric_input("Nhập ngưỡng dưới cho Canny: ")
+        canny_threshold2 = get_numeric_input("Nhập ngưỡng trên cho Canny: ")
+        brightness_alpha = get_float_input("Nhập hệ số alpha cho chỉnh sáng: ")
+        
+        resize_smooth_edges_and_adjust_brightness(image_path, output_path, new_width, new_height, smoothed_sigma, canny_threshold1, canny_threshold2, brightness_alpha)
+
+======================================Ở DƯỚI LÀ PHẦN CODE CÓ THƯ VIỆN TKINTER ĐỂ NHẬP FILE=========================================
+import cv2
+import matplotlib.pyplot as plt
+from tkinter import *
+from tkinter import filedialog
+
+def get_numeric_input(prompt):
+    while True:
+        user_input = input(prompt)
+        if user_input.isdigit():
+            return int(user_input)
+        else:
+            print("Vui lòng nhập một số nguyên.")
+
+def get_float_input(prompt):
+    while True:
+        user_input = input(prompt)
+        try:
+            return float(user_input)
+        except ValueError:
+            print("Vui lòng nhập một số thực.")
+
+def resize_smooth_edges_and_adjust_brightness(image_path, output_path, new_width, new_height, smoothed_sigma, canny_threshold1, canny_threshold2, brightness_alpha):
+    img = cv2.imread(image_path)
+
+    if img is None:
+        print(f"Không thể đọc file ảnh từ đường dẫn: {image_path}")
+        return
+
+    resized = cv2.resize(img, (new_width, new_height))
+    smoothed = cv2.GaussianBlur(img, (smoothed_sigma, smoothed_sigma), 0)
+    edges = cv2.Canny(smoothed, canny_threshold1, canny_threshold2)
+    alpha = brightness_alpha
+    adjusted_brightness = cv2.addWeighted(img, alpha, img, 0, 0)
+
+    Titles = ["Original", "Resized", "Smoothed", "Edges", "Adjusted Brightness"]
+    images = [img, resized, smoothed, edges, adjusted_brightness]
+    count = 5
+
+    for i in range(count):
+        plt.subplot(2, 3, i + 1)
+        plt.title(Titles[i])
+        plt.imshow(cv2.cvtColor(images[i], cv2.COLOR_BGR2RGB))
+        plt.xticks([]), plt.yticks([])
+
+    plt.savefig(output_path)
+    plt.show()
+
+def browse_image():
+    file_path = filedialog.askopenfilename()
+    entry_image_path.delete(0, END)
+    entry_image_path.insert(0, file_path)
+
+def browse_output_path():
+    file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png"), ("All files", "*.*")])
+    entry_output_path.delete(0, END)
+    entry_output_path.insert(0, file_path)
+
+def process_image():
+    image_path = entry_image_path.get()
+    output_path = entry_output_path.get()
+    new_width = int(entry_new_width.get())
+    new_height = int(entry_new_height.get())
+    smoothed_sigma = int(entry_smoothed_sigma.get())
+    canny_threshold1 = int(entry_canny_threshold1.get())
+    canny_threshold2 = int(entry_canny_threshold2.get())
+    brightness_alpha = float(entry_brightness_alpha.get())
+
+    resize_smooth_edges_and_adjust_brightness(image_path, output_path, new_width, new_height, smoothed_sigma, canny_threshold1, canny_threshold2, brightness_alpha)
+
+# Tạo giao diện
+root = Tk()
+root.title("Image Processing Tool")
+
+# Tạo các widget và đặt chúng vào trong giao diện
+label_image_path = Label(root, text="Image Path:")
+label_image_path.grid(row=0, column=0)
+entry_image_path = Entry(root)
+entry_image_path.grid(row=0, column=1)
+button_browse_image = Button(root, text="Browse", command=browse_image)
+button_browse_image.grid(row=0, column=2)
+
+label_output_path = Label(root, text="Output Path:")
+label_output_path.grid(row=1, column=0)
+entry_output_path = Entry(root)
+entry_output_path.grid(row=1, column=1)
+button_browse_output_path = Button(root, text="Browse", command=browse_output_path)
+button_browse_output_path.grid(row=1, column=2)
+
+label_new_width = Label(root, text="New Width:")
+label_new_width.grid(row=2, column=0)
+entry_new_width = Entry(root)
+entry_new_width.grid(row=2, column=1)
+
+label_new_height = Label(root, text="New Height:")
+label_new_height.grid(row=3, column=0)
+entry_new_height = Entry(root)
+entry_new_height.grid(row=3, column=1)
+
+label_smoothed_sigma = Label(root, text="Smoothed Sigma:")
+label_smoothed_sigma.grid(row=4, column=0)
+entry_smoothed_sigma = Entry(root)
+entry_smoothed_sigma.grid(row=4, column=1)
+
+label_canny_threshold1 = Label(root, text="Canny Threshold1:")
+label_canny_threshold1.grid(row=5, column=0)
+entry_canny_threshold1 = Entry(root)
+entry_canny_threshold1.grid(row=5, column=1)
+
+label_canny_threshold2 = Label(root, text="Canny Threshold2:")
+label_canny_threshold2.grid(row=6, column=0)
+entry_canny_threshold2 = Entry(root)
+entry_canny_threshold2.grid(row=6, column=1)
+
+label_brightness_alpha = Label(root, text="Brightness Alpha:")
+label_brightness_alpha.grid(row=7, column=0)
+entry_brightness_alpha = Entry(root)
+entry_brightness_alpha.grid(row=7, column=1)
+
+button_process = Button(root, text="Process Image", command=process_image)
+button_process.grid(row=8, column=0, columnspan=3)
+
+# Chạy giao diện
+root.mainloop()
