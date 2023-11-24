@@ -1,0 +1,99 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn import metrics
+import matplotlib.pyplot as plt
+from tkinter import *
+from tkinter import messagebox
+
+# Đọc dữ liệu từ file CSV hoặc bất kỳ nguồn dữ liệu nào khác
+# Trong trường hợp này, giả sử có một file CSV chứa thông tin về sinh viên và hiệu suất học tập
+# Các cột có thể bao gồm điểm số, số giờ ôn tập, số lần nghỉ học, vv.
+
+# Đọc dữ liệu từ file CSV (thay đổi 'Student_Performance.csv' thành tên file thực tế)
+data = pd.read_csv('Student_Performance.csv')
+
+# Xử lý giá trị thiếu (nếu có)
+data = data.dropna()
+
+# Xác định đặc trưng (features) và biến phụ thuộc (target)
+# Trong trường hợp này, giả sử 'Performance Index' là biến phụ thuộc, và các cột khác là đặc trưng
+X = data[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced', 'Performance Index']]  # Thay đổi tên cột thành các đặc trưng thực tế
+y = data['Performance Index']
+
+# Chia dữ liệu thành bộ dữ liệu huấn luyện và bộ dữ liệu kiểm thử
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+
+# Khởi tạo mô hình hồi qui tuyến tính
+model = LinearRegression()
+
+# Huấn luyện mô hình trên bộ dữ liệu huấn luyện
+model.fit(X_train, y_train)
+
+# Tạo cửa sổ Tkinter
+root = Tk()
+root.title("Student Performance Predictor")
+
+# Hàm dự đoán dựa trên giá trị nhập từ người dùng
+def predict_performance():
+    try:
+        hours_studied = float(entry_hours_studied.get())
+        prev_scores = float(entry_prev_scores.get())
+        extracurricular_activities = float(entry_extracurricular.get())
+        sleep_hours = float(entry_sleep_hours.get())
+        sample_papers_practiced = float(entry_sample_papers.get())
+
+        # Tạo một DataFrame mới chứa dữ liệu nhập từ người dùng
+        user_data = pd.DataFrame({
+            'Hours Studied': [hours_studied],
+            'Previous Scores': [prev_scores],
+            'Extracurricular Activities': [extracurricular_activities],
+            'Sleep Hours': [sleep_hours],
+            'Sample Question Papers Practiced': [sample_papers_practiced]
+        })
+
+        # Dự đoán hiệu suất
+        prediction = model.predict(user_data)
+
+        # Hiển thị dự đoán trong cửa sổ thông báo
+        messagebox.showinfo("Prediction Result", f"Predicted Performance Index: {prediction[0]:.2f}")
+    except ValueError:
+        messagebox.showerror("Error", "Please enter valid numeric values for all fields.")
+
+# Tạo và định dạng các widget trên giao diện
+label_hours_studied = Label(root, text="Hours Studied:")
+label_hours_studied.grid(row=0, column=0, padx=10, pady=10)
+
+entry_hours_studied = Entry(root)
+entry_hours_studied.grid(row=0, column=1, padx=10, pady=10)
+
+label_prev_scores = Label(root, text="Previous Scores:")
+label_prev_scores.grid(row=1, column=0, padx=10, pady=10)
+
+entry_prev_scores = Entry(root)
+entry_prev_scores.grid(row=1, column=1, padx=10, pady=10)
+
+label_extracurricular = Label(root, text="Extracurricular Activities:")
+label_extracurricular.grid(row=2, column=0, padx=10, pady=10)
+
+entry_extracurricular = Entry(root)
+entry_extracurricular.grid(row=2, column=1, padx=10, pady=10)
+
+label_sleep_hours = Label(root, text="Sleep Hours:")
+label_sleep_hours.grid(row=3, column=0, padx=10, pady=10)
+
+entry_sleep_hours = Entry(root)
+entry_sleep_hours.grid(row=3, column=1, padx=10, pady=10)
+
+label_sample_papers = Label(root, text="Sample Question Papers Practiced:")
+label_sample_papers.grid(row=4, column=0, padx=10, pady=10)
+
+entry_sample_papers = Entry(root)
+entry_sample_papers.grid(row=4, column=1, padx=10, pady=10)
+
+button_predict = Button(root, text="Predict Performance", command=predict_performance)
+button_predict.grid(row=5, column=0, columnspan=2, pady=10)
+
+# Chạy vòng lặp chính của Tkinter
+root.mainloop()
