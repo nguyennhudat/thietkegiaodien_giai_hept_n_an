@@ -1,0 +1,64 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from tkinter import Tk, Label, Button, Listbox, Text, END
+
+class StudentPerformanceGUI:
+    def __init__(self, master):
+        self.master = master
+        master.title("Student Performance Analysis")
+
+        # Đọc dữ liệu từ file CSV
+        self.file_path = 'Student_Performance.csv'
+        self.data = pd.read_csv(self.file_path)
+
+        # Hiển thị một số thông tin cơ bản về dữ liệu
+        self.info_label = Label(master, text="Thông tin cơ bản về dữ liệu:")
+        self.info_label.pack()
+
+        self.info_text = Text(master, height=10, width=50)
+        self.info_text.insert(END, str(self.data.info()))  # Convert the info() output to string
+        self.info_text.pack()
+
+        # Chọn cột để vẽ đồ thị
+        self.column_label = Label(master, text="Chọn cột để vẽ đồ thị:")
+        self.column_label.pack()
+
+        self.column_listbox = Listbox(master, selectmode='single', height=6)
+        for column in self.data.columns:
+            self.column_listbox.insert(END, column)
+        self.column_listbox.pack()
+
+        # Nút vẽ đồ thị
+        self.plot_button = Button(master, text="Vẽ đồ thị", command=self.plot_histogram)
+        self.plot_button.pack()
+
+        # Hiển thị thông tin cột được chọn
+        self.selected_column_label = Label(master, text="")
+        self.selected_column_label.pack()
+
+    def plot_histogram(self):
+        selected_column_index = self.column_listbox.curselection()
+        if selected_column_index:
+            selected_column = self.column_listbox.get(selected_column_index[0])
+
+            # Hiển thị thông tin cột được chọn
+            column_info = self.data[selected_column].describe()
+            info_text = f"Thông tin của cột '{selected_column}':\n"
+            info_text += f"Min: {column_info['min']}\n"
+            info_text += f"Max: {column_info['max']}\n"
+            info_text += f"Trung bình: {column_info['mean']}"
+            self.selected_column_label.config(text=info_text)
+
+            # Vẽ đồ thị phân bố cho cột đã chọn
+            plt.figure(figsize=(8, 6))
+            plt.hist(self.data[selected_column], bins=20, color='skyblue', edgecolor='black')
+            plt.title(f'Distribution of {selected_column}')
+            plt.xlabel(selected_column)
+            plt.ylabel('Frequency')
+            plt.grid(True)
+            plt.show()
+
+# Tạo cửa sổ và chạy ứng dụng
+root = Tk()
+app = StudentPerformanceGUI(root)
+root.mainloop()
